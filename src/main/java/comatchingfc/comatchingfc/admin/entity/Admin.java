@@ -15,6 +15,9 @@ public class Admin {
     @Column(name = "admin_id")
     private Long id;
 
+    @Column(columnDefinition = "BINARY(16)")
+    private byte[] uuid;
+
     private String username;
 
     private String accountId;
@@ -22,7 +25,8 @@ public class Admin {
     private String password;
 
     @Builder
-    public Admin(String username, String accountId, String password) {
+    public Admin(byte[] uuid, String username, String accountId, String password) {
+        this.uuid = uuid;
         this.username = username;
         this.accountId = accountId;
         this.password = password;

@@ -13,7 +13,11 @@ public enum ResponseCode {
 
 	//Auth response
 	TOKEN_EXPIRED(401, "SEC-001", HttpStatus.UNAUTHORIZED, "Token is expired"),
-	JWT_ERROR(403, "SEC-002", HttpStatus.FORBIDDEN, "Jwt error occurred");
+	JWT_ERROR(403, "SEC-002", HttpStatus.FORBIDDEN, "Jwt error occurred"),
+	ACCOUNT_ID_DUPLICATED(409, "SEC-003", HttpStatus.CONFLICT, "AccountId is duplicated"),
+	INVALID_LOGIN(403, "SEC-004", HttpStatus.FORBIDDEN, "Invalid AccountId or Password"),
+	USER_NOT_FOUND(404, "SEC-005", HttpStatus.NOT_FOUND, "Cannot found user"),
+	ACCESS_DENIED(403, "SEC-004", HttpStatus.FORBIDDEN, "Access denied");
 
 	private final Integer status;
 	private final String code;
