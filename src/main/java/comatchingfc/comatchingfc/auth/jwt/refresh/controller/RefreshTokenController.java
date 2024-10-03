@@ -1,7 +1,7 @@
 package comatchingfc.comatchingfc.auth.jwt.refresh.controller;
 
 import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
-import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenService;
+import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.utils.response.Response;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class RefreshTokenController {
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRedisService refreshTokenRedisService;
     private final SecurityUtil securityUtil;
 
     @PostMapping("/auth/refresh")
@@ -40,7 +40,7 @@ public class RefreshTokenController {
             String uuid = jwtUtil.getUUID(refreshToken);
             String role = jwtUtil.getRole(refreshToken);
 
-            String storedRefreshToken = refreshTokenService.getRefreshToken(uuid);
+            String storedRefreshToken = refreshTokenRedisService.getRefreshToken(uuid);
 
             if (storedRefreshToken == null) {
                 return Response.errorResponse(ResponseCode.JWT_ERROR);
@@ -58,7 +58,7 @@ public class RefreshTokenController {
             String newAccessToken = jwtUtil.generateAccessToken(uuid, role);
             String newRefreshToken = jwtUtil.generateRefreshToken(uuid, role);
 
-            refreshTokenService.saveRefreshToken(uuid, newRefreshToken);
+            refreshTokenRedisService.saveRefreshToken(uuid, newRefreshToken);
 
             // Access Token을 HttpOnly 쿠키에 설정
             ResponseCookie accessCookie = securityUtil.setAccessResponseCookie(newAccessToken);

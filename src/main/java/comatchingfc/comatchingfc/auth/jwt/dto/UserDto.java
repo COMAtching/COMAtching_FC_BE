@@ -1,4 +1,4 @@
-package comatchingfc.comatchingfc.auth.oauth2.dto;
+package comatchingfc.comatchingfc.auth.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

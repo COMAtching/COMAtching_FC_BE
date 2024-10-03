@@ -6,7 +6,7 @@ import comatchingfc.comatchingfc.admin.entity.Admin;
 import comatchingfc.comatchingfc.admin.repository.AdminRepository;
 import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
-import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenService;
+import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
@@ -35,7 +35,7 @@ class AdminServiceTest {
     private JwtUtil jwtUtil;
 
     @Mock
-    private RefreshTokenService refreshTokenService;
+    private RefreshTokenRedisService refreshTokenRedisService;
 
     @InjectMocks
     private AdminService adminService;
@@ -174,7 +174,7 @@ class AdminServiceTest {
         String refreshToken = "refreshToken123";
 
         when(jwtUtil.generateAccessToken(adminUuidHex, "ROLE_ADMIN")).thenReturn(accessToken);
-        when(refreshTokenService.getRefreshToken(adminUuidHex)).thenReturn(null); // 기존 refreshToken 없음
+        when(refreshTokenRedisService.getRefreshToken(adminUuidHex)).thenReturn(null); // 기존 refreshToken 없음
         when(jwtUtil.generateRefreshToken(adminUuidHex, "ROLE_ADMIN")).thenReturn(refreshToken);
 
         // Act
@@ -189,8 +189,8 @@ class AdminServiceTest {
         verify(adminRepository, times(1)).findByAccountId(exAccountId);
         verify(passwordEncoder, times(1)).matches(exPassword, exEncodedPassword);
         verify(jwtUtil, times(1)).generateAccessToken(adminUuidHex, "ROLE_ADMIN");
-        verify(refreshTokenService, times(1)).getRefreshToken(adminUuidHex);
-        verify(refreshTokenService, times(1)).saveRefreshToken(adminUuidHex, refreshToken);
+        verify(refreshTokenRedisService, times(1)).getRefreshToken(adminUuidHex);
+        verify(refreshTokenRedisService, times(1)).saveRefreshToken(adminUuidHex, refreshToken);
         verify(jwtUtil, times(1)).generateRefreshToken(adminUuidHex, "ROLE_ADMIN");
     }
 
@@ -215,7 +215,7 @@ class AdminServiceTest {
         verify(adminRepository, times(1)).findByAccountId("nonexistent");
         verify(passwordEncoder, never()).matches(anyString(), anyString());
         verify(jwtUtil, never()).generateAccessToken(anyString(), anyString());
-        verify(refreshTokenService, never()).getRefreshToken(anyString());
+        verify(refreshTokenRedisService, never()).getRefreshToken(anyString());
     }
 
     @Test
@@ -249,6 +249,6 @@ class AdminServiceTest {
         verify(adminRepository, times(1)).findByAccountId("admin123");
         verify(passwordEncoder, times(1)).matches("wrongpassword", "encodedPassword");
         verify(jwtUtil, never()).generateAccessToken(anyString(), anyString());
-        verify(refreshTokenService, never()).getRefreshToken(anyString());
+        verify(refreshTokenRedisService, never()).getRefreshToken(anyString());
     }
 }

@@ -6,7 +6,7 @@ import comatchingfc.comatchingfc.admin.entity.Admin;
 import comatchingfc.comatchingfc.admin.repository.AdminRepository;
 import comatchingfc.comatchingfc.auth.jwt.JwtUtil;
 import comatchingfc.comatchingfc.auth.jwt.dto.TokenRes;
-import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenService;
+import comatchingfc.comatchingfc.auth.jwt.refresh.service.RefreshTokenRedisService;
 import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
@@ -22,7 +22,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRedisService refreshTokenRedisService;
 
     @Transactional
     public void adminRegister(AdminRegisterReq registerReq) {
@@ -64,11 +64,11 @@ public class AdminService {
 
         String adminUuid = UUIDUtil.bytesToHex(admin.getUuid());
         String accessToken = jwtUtil.generateAccessToken(adminUuid, "ROLE_ADMIN");
-        String refreshToken = refreshTokenService.getRefreshToken(adminUuid);
+        String refreshToken = refreshTokenRedisService.getRefreshToken(adminUuid);
 
         if (refreshToken == null) {
             refreshToken = jwtUtil.generateRefreshToken(adminUuid, "ROLE_ADMIN");
-            refreshTokenService.saveRefreshToken(adminUuid, refreshToken);
+            refreshTokenRedisService.saveRefreshToken(adminUuid, refreshToken);
         }
 
         return TokenRes.builder()

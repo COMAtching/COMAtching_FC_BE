@@ -37,17 +37,20 @@ public class Users extends BaseEntity {
 
     private String socialId;
 
+    private String cheeringPlayer;
+
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_PENDING;
 
     private Boolean deactivated = false;
 
     @Builder
-    public Users(String identifyKey, String username, int age, String socialId) {
+    public Users(String identifyKey, String username, int age, String socialId, String cheeringPlayer) {
         this.identifyKey = identifyKey;
         this.username = username;
         this.age = age;
         this.socialId = socialId;
+        this.cheeringPlayer = cheeringPlayer;
     }
 
     public void setUserAiInfo(UserAiInfo userAiInfo) {

@@ -36,7 +36,6 @@ dependencies {
     implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
 
     //Security & Auth dependency
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'

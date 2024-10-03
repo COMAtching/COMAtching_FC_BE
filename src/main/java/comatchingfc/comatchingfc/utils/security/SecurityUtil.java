@@ -2,7 +2,7 @@ package comatchingfc.comatchingfc.utils.security;
 
 import comatchingfc.comatchingfc.admin.entity.Admin;
 import comatchingfc.comatchingfc.admin.repository.AdminRepository;
-import comatchingfc.comatchingfc.auth.oauth2.dto.CustomOAuth2User;
+import comatchingfc.comatchingfc.auth.jwt.dto.CustomUser;
 import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.repository.UserRepository;
@@ -29,9 +29,9 @@ public class SecurityUtil {
     public Users getCurrentUserEntity() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User customOAuth2User) {
-            String uuid = customOAuth2User.getName();
-            String role = customOAuth2User.getRole();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
+            String uuid = customUser.getUuid();
+            String role = customUser.getRole();
 
             if ("ROLE_ADMIN".equals(role)) {
                 throw new BusinessException(ResponseCode.ACCESS_DENIED);
@@ -52,9 +52,9 @@ public class SecurityUtil {
     public Admin getCurrentAdminEntity() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User customOAuth2User) {
-            String uuid = customOAuth2User.getName();
-            String role = customOAuth2User.getRole();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUser customUser) {
+            String uuid = customUser.getUuid();
+            String role = customUser.getRole();
 
             if (!"ROLE_ADMIN".equals(role)) {
                 throw new BusinessException(ResponseCode.ACCESS_DENIED);

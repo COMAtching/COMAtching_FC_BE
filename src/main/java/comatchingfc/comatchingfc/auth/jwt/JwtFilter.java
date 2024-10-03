@@ -1,7 +1,7 @@
 package comatchingfc.comatchingfc.auth.jwt;
 
-import comatchingfc.comatchingfc.auth.oauth2.dto.CustomOAuth2User;
-import comatchingfc.comatchingfc.auth.oauth2.dto.UserDto;
+import comatchingfc.comatchingfc.auth.jwt.dto.CustomUser;
+import comatchingfc.comatchingfc.auth.jwt.dto.UserDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -29,10 +29,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     private static final List<String> WHITELIST = List.of(
-            "/login",
             "/auth/refresh",
             "/admin/register",
-            "/admin/login"
+            "/admin/login",
+            "user/login"
     );
 
     @Override
@@ -78,8 +78,8 @@ public class JwtFilter extends OncePerRequestFilter {
         userDto.setUuid(uuid);
         userDto.setRole(role);
 
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDto);
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+        CustomUser customUser = new CustomUser(userDto);
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 

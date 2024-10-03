@@ -11,7 +11,7 @@ import static comatchingfc.comatchingfc.auth.jwt.JwtExpirationConst.REFRESH_TOKE
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class RefreshTokenRedisService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void saveRefreshToken(String uuid, String refreshToken) {
