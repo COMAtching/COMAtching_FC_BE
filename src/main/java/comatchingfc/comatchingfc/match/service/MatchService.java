@@ -5,6 +5,8 @@ import static comatchingfc.comatchingfc.user.enums.UserCrudType.*;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,7 @@ public class MatchService {
 	private final MatchingRabbitMQUtil matchingRabbitMQUtil;
 	private final UserRabbitMQUtil userRabbitMQUtil;
 	private final SecurityUtil securityUtil;
+	private final RedisTemplate redisTemplate;
 
 	/**
 	 * 매칭 프로세스 및 matching history 생성
@@ -87,6 +90,8 @@ public class MatchService {
 
 		applier.addMatchingHistory(matchingHistory);
 
+		saveMatchingHistoryToCache(matchingHistory);
+
 		matchingHistoryRepository.save(matchingHistory);
 
 		return MatchRes.builder()
@@ -113,4 +118,10 @@ public class MatchService {
 		}
 		return (count == 0)? true : false;
 	}
+
+	@CachePut(value = "matchingHistory", key = "#matchingHistory.applier.id")
+	public MatchingHistory saveMatchingHistoryToCache(MatchingHistory matchingHistory) {
+		return matchingHistory;
+	}
+
 }

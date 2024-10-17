@@ -14,6 +14,8 @@ import comatchingfc.comatchingfc.utils.rabbitMQ.UserRabbitMQUtil;
 import comatchingfc.comatchingfc.utils.security.SecurityUtil;
 import comatchingfc.comatchingfc.utils.uuid.UUIDUtil;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +73,7 @@ public class UserService {
         return user.getUserAiInfo().isPick();
     }
 
+    @Cacheable(value = "enemyUserInfo", key = "#user.id")
     public UserInfo getEnemyUserInfo() {
         Users user = securityUtil.getCurrentUserEntity();
         Users enemy = user.getMatchingHistory().getEnemy();
