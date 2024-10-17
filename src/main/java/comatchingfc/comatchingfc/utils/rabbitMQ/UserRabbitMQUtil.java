@@ -20,6 +20,7 @@ import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.UserCrudReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.UserCrudResMsg;
+import comatchingfc.comatchingfc.utils.response.RabbitMQStateCode;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,9 +55,14 @@ public class UserRabbitMQUtil {
 			correlationData,
 			responseType);
 
+		String stateCode = responseMsg.getStateCode();
 		log.info("[UserRabbitMQUtil requestUserToCsv] response={}", responseMsg.toJsonString());
 		if(responseMsg == null){
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
+		}
+
+		if(!stateCode.equals(RabbitMQStateCode.CRUD_SUCCESS.getCode())){
+			log.info("[MatchingRabbitMQUtil requestMatch] User Crud Exception - stateCode = {}, message = {}", responseMsg.getStateCode(), responseMsg.getMessage());
 		}
 
 		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {}", responseMsg.getStateCode());

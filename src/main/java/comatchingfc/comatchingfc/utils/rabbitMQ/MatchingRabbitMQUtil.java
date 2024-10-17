@@ -13,6 +13,7 @@ import comatchingfc.comatchingfc.exception.BusinessException;
 import comatchingfc.comatchingfc.user.entity.CheerPropensity;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.req.MatchReqMsg;
 import comatchingfc.comatchingfc.utils.rabbitMQ.Message.res.MatchResMsg;
+import comatchingfc.comatchingfc.utils.response.RabbitMQStateCode;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +47,14 @@ public class MatchingRabbitMQUtil {
 			correlationData,
 			responseType);
 
+		String stateCode = responseMsg.getStateCode();
+
 		if(responseMsg == null){
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
+		}
+
+		if(!stateCode.equals(RabbitMQStateCode.MATCH_SUCCESS.getCode())){
+			log.info("[MatchingRabbitMQUtil requestMatch] match request Exception - stateCode = {}, message={}", stateCode, responseMsg.getMessage());
 		}
 
 		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {} / responseMsg.getEnemyUuid={} ", responseMsg.getStateCode(), responseMsg.getEnemyUuid());
