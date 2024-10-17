@@ -10,6 +10,7 @@ public class UserCrudResMsg {
 
 	private String stateCode;
 	private String enemyUuid;
+	private String message;
 
 	public String toJsonString() {
 		ObjectMapper objectMapper = new ObjectMapper();
