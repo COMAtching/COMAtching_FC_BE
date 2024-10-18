@@ -3,6 +3,7 @@ package comatchingfc.comatchingfc.utils.rabbitMQ;
 import java.util.UUID;
 
 import comatchingfc.comatchingfc.exception.BusinessException;
+import comatchingfc.comatchingfc.utils.response.RabbitMQStateCode;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -40,16 +41,20 @@ public class AuthRabbitMQUtil {
 		CorrelationData correlationData = new CorrelationData(requestId);
 		ParameterizedTypeReference<ReserveAuthResMsg> responseType = new ParameterizedTypeReference<ReserveAuthResMsg>(){};
 
-
 		ReserveAuthResMsg responseMsg =  rabbitTemplate.convertSendAndReceiveAsType(
 			matchRequestQueue,
 			requestMsg,
 			(MessagePostProcessor) null,
 			correlationData,
 			responseType);
+		String stateCode = responseMsg.getStateCode();
 
 		if(responseMsg == null){
 			throw new BusinessException(ResponseCode.MATCH_GENERAL_FAIL);
+		}
+
+		if(!stateCode.equals(RabbitMQStateCode.AUTH_SUCCESS.getCode())){
+			log.info("[AuthRabbitMQUtil - checkReserveNumber] - stateCode={}, message={}", stateCode, responseMsg.getMessage());
 		}
 
 		log.info("[MatchingRabbitMQUtil requestMatch] stateCode = {}", responseMsg.getStateCode());

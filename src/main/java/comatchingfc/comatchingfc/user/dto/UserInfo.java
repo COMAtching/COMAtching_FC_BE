@@ -1,5 +1,6 @@
 package comatchingfc.comatchingfc.user.dto;
 
+import comatchingfc.comatchingfc.user.entity.Users;
 import comatchingfc.comatchingfc.user.enums.CheerPropensityEnum;
 import comatchingfc.comatchingfc.user.enums.Gender;
 import lombok.AllArgsConstructor;

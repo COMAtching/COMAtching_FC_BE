@@ -10,4 +10,5 @@ public class ReserveAuthResMsg {
 	private String stateCode;
 	private TeamSide teamSide;
 	private boolean authSuccess;
+	private String message;
 }

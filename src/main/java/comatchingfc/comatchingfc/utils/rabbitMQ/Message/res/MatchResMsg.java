@@ -6,4 +6,5 @@ import lombok.Getter;
 public class MatchResMsg {
 	private String stateCode;
 	private String enemyUuid;
+	private String message;
 }
