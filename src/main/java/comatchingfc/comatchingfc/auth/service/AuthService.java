@@ -49,17 +49,18 @@ public class AuthService {
         Optional<Users> userOpt = userRepository.findByIdentifyKey(userLoginReq.getTicket());
         if (userOpt.isPresent()) {
             Users user = userOpt.get();
-            if (user.getRole() == UserRole.ROLE_USER) {
-                if (user.getDeactivated()) {
+            if (user.getDeactivated()) {
                     throw new BusinessException(ResponseCode.DEACTIVATED_USER);
-                }
-                userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
-                userRole = user.getRole().toString();
-
-                TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
-
-                return new UserLoginRes(TeamSide.HOME, userRole, tokenRes);
             }
+                
+            userUuid = UUIDUtil.bytesToHex(user.getUserAiInfo().getUuid());
+            userRole = user.getRole().toString();
+
+            TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
+            TeamSide teamSide = user.getUserAiInfo().getUserFeature().getTeamSide();
+
+            return new UserLoginRes(teamSide, userRole, tokenRes);
+            
         }
 
         ReserveAuthResMsg reserveAuthResMsg = authRabbitMQUtil.checkReserveNumber(userLoginReq.getTicket());
@@ -76,10 +77,11 @@ public class AuthService {
                 .build();
 
         UserFeature userFeature = UserFeature.builder().build();
-
+        
+        TeamSide teamSide = reserveAuthResMsg.getTeamSide();
         userAiInfo.setUsers(user);
         userFeature.setUserAiInfo(userAiInfo);
-        userFeature.setTeamSide(reserveAuthResMsg.getTeamSide());
+        userFeature.setTeamSide(teamSide);
 
         userRepository.save(user);
         userAiInfoRepository.save(userAiInfo);
@@ -90,6 +92,6 @@ public class AuthService {
 
         TokenRes tokenRes = tokenUtil.makeTokenRes(userUuid, userRole);
 
-        return new UserLoginRes(TeamSide.HOME, userRole, tokenRes);
+        return new UserLoginRes(teamSide, userRole, tokenRes);
     }
 }
