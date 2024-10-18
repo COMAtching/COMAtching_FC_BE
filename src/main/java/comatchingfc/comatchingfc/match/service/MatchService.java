@@ -90,8 +90,6 @@ public class MatchService {
 
 		applier.addMatchingHistory(matchingHistory);
 
-		saveMatchingHistoryToCache(matchingHistory);
-
 		matchingHistoryRepository.save(matchingHistory);
 
 		return MatchRes.builder()

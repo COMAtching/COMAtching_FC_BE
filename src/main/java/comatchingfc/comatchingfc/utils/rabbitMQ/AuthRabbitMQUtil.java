@@ -3,7 +3,6 @@ package comatchingfc.comatchingfc.utils.rabbitMQ;
 import java.util.UUID;
 
 import comatchingfc.comatchingfc.exception.BusinessException;
-import comatchingfc.comatchingfc.exception.RabbitMQException;
 import comatchingfc.comatchingfc.utils.response.RabbitMQStateCode;
 import comatchingfc.comatchingfc.utils.response.ResponseCode;
 import org.springframework.amqp.core.MessagePostProcessor;

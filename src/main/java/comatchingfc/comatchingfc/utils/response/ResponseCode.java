@@ -15,6 +15,7 @@ public enum ResponseCode {
 	MATCH_GENERAL_FAIL(400, "MAT-001", HttpStatus.INTERNAL_SERVER_ERROR, "Matching process was fail"),
 	ENEMY_NOT_FOUND(400, "MAT-002", HttpStatus.INTERNAL_SERVER_ERROR, "Can't find enemy"),
 	MATCH_ALREADY_EXIST(400, "MAT-003", HttpStatus.INTERNAL_SERVER_ERROR, "Already matched"),
+	LACK_OF_MATCH_RESOURCE(400, "MAT-004", HttpStatus.INTERNAL_SERVER_ERROR, "Matching resource is lack"),
 
 	//Notice response
 	NO_NOTICE(200, "NOT-001", HttpStatus.OK, "There is any notice exist"),

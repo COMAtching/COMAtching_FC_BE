@@ -73,7 +73,6 @@ public class UserService {
         return user.getUserAiInfo().isPick();
     }
 
-    @Cacheable(value = "enemyUserInfo", key = "#user.id")
     public UserInfo getEnemyUserInfo() {
         Users user = securityUtil.getCurrentUserEntity();
         Users enemy = user.getMatchingHistory().getEnemy();
